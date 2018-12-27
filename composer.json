@@ -13,7 +13,6 @@
         "psr-4": {"OtakuSquare\\SyliusApiClient\\": "src/"}
     },
     "require": {
-        "ext-curl": "^7.2",
         "guzzlehttp/guzzle": "^6.3"
     }
 }
