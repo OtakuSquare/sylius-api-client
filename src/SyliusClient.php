@@ -5,6 +5,7 @@ namespace OtakuSquare\SyliusApiClient;
 use GuzzleHttp\Client;
 use OtakuSquare\SyliusApiClient\Authorization\ApiCredentials;
 use OtakuSquare\SyliusApiClient\Exception\InvalidApiResponseException;
+use OtakuSquare\SyliusApiClient\Helper\BaseHelper;
 
 /**
  * Class SyliusClient
@@ -57,12 +58,13 @@ class SyliusClient
 
         $authenticationResponse = $this->abstractRequest('POST', '/oauth/v2/token', [
             'headers' => [
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Accept' => 'application/json',
             ],
-            'data' => json_encode($this->buildAuthenticationArray())
+            'body' => http_build_query($this->buildAuthenticationArray())
         ]);
 
-        $decodedResponse = json_decode($authenticationResponse);
+        $decodedResponse = json_decode($authenticationResponse->getBody());
 
         if (!is_object($decodedResponse) || !property_exists($decodedResponse, 'access_token')) {
             throw new InvalidApiResponseException();
@@ -119,6 +121,21 @@ class SyliusClient
     }
 
     /**
+     * @param $helperClass
+     * @return mixed|BaseHelper
+     */
+    public function createHelper($helperClass)
+    {
+        /**
+         * @var BaseHelper $helper
+         */
+        $helper = new $helperClass();
+        $helper->setSyliusClient($this);
+
+        return $helper;
+    }
+
+    /**
      * @param array $regularArray
      * @return array
      */
@@ -159,7 +176,7 @@ class SyliusClient
         return [
             'client_id' => $this->apiCredentials->clientId,
             'client_secret' => $this->apiCredentials->clientSecret,
-            'grant_type' => 'refresh_token',
+            'grant_type' => $this->apiCredentials->grantType,
             'refresh_token' => $this->apiCredentials->refreshToken
         ];
     }
