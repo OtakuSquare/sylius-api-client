@@ -1,0 +1,19 @@
+{
+    "name": "otakusquare/sylius-api-client",
+    "description": "A simple to use PHP client for Sylius' REST API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Riekelt Brands",
+            "email": "r.brands@otakusquare.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"OtakuSquare\\SyliusApiClient\\": "src/"}
+    },
+    "require": {
+        "ext-curl": "^7.2",
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
